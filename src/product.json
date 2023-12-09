@@ -1,0 +1,108 @@
+{
+  "products": [
+    {
+      "id": "1",
+      "nombre": "Laptop HP Pavilion",
+      "marca": "HP",
+      "descripcion": "Laptop con procesador Intel Core i5, 8GB de RAM, y SSD de 256GB",
+      "precio": 899.99,
+      "stock": 30
+    },
+    {
+      "id": "3",
+      "nombre": "Tablet Apple iPad Pro",
+      "marca": "Apple",
+      "descripcion": "Tablet con pantalla Retina de 11 pulgadas, 256GB de almacenamiento",
+      "precio": 1099.99,
+      "stock": 15
+    },
+    {
+      "id": "4",
+      "nombre": "Monitor LG UltraWide",
+      "marca": "LG",
+      "descripcion": "Monitor curvo de 34 pulgadas con resolución 3440x1440",
+      "precio": 799.5,
+      "stock": 10
+    },
+    {
+      "id": "5",
+      "nombre": "Cámara Sony Alpha a7 III",
+      "marca": "Sony",
+      "descripcion": "Cámara mirrorless con sensor full-frame de 24.2MP",
+      "precio": 1999,
+      "stock": 8
+    },
+    {
+      "id": "6",
+      "nombre": "Altavoces Bluetooth Bose SoundLink",
+      "marca": "Bose",
+      "descripcion": "Altavoces portátiles con sonido de alta calidad y conexión Bluetooth",
+      "precio": 249.95,
+      "stock": 25
+    },
+    {
+      "id": "7",
+      "nombre": "Auriculares inalámbricos Apple AirPods Pro",
+      "marca": "Apple",
+      "descripcion": "Auriculares con cancelación de ruido y resistencia al agua",
+      "precio": 249,
+      "stock": 18
+    },
+    {
+      "id": "8",
+      "nombre": "Impresora multifunción Epson EcoTank",
+      "marca": "Epson",
+      "descripcion": "Impresora con sistema de tanque de tinta recargable",
+      "precio": 399.99,
+      "stock": 12
+    },
+    {
+      "id": "9",
+      "nombre": "Teclado mecánico Corsair K70 RGB",
+      "marca": "Corsair",
+      "descripcion": "Teclado mecánico para juegos con retroiluminación RGB",
+      "precio": 159.95,
+      "stock": 20
+    },
+    {
+      "id": "10",
+      "nombre": "Disco duro externo Seagate Backup Plus",
+      "marca": "Seagate",
+      "descripcion": "Disco duro externo de 2TB con conexión USB 3.0",
+      "precio": 89.99,
+      "stock": 30
+    },
+    {
+      "id": "11",
+      "nombre": "Router inalámbrico TP-Link Archer C7",
+      "marca": "TP-Link",
+      "descripcion": "Router WiFi de doble banda con velocidades de hasta 1750 Mbps",
+      "precio": 79.99,
+      "stock": 15
+    },
+    {
+      "id": "12",
+      "nombre": "Batería externa Anker PowerCore",
+      "marca": "Anker",
+      "descripcion": "Batería portátil de 20000mAh para cargar dispositivos móviles",
+      "precio": 49.99,
+      "stock": 22
+    },
+    {
+      "id": "13",
+      "nombre": "Smartwatch Garmin Forerunner 245",
+      "marca": "Garmin",
+      "descripcion": "Smartwatch con GPS y monitor de frecuencia cardíaca",
+      "precio": 299,
+      "stock": 17
+    },
+    {
+      "id": "14",
+      "nombre": "Tarjeta gráfica NVIDIA GeForce RTX 3080",
+      "marca": "NVIDIA",
+      "descripcion": "Tarjeta gráfica para gaming con 10GB de memoria GDDR6X",
+      "precio": 699.99,
+      "stock": 7
+    }
+  ]
+}
