@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { ProductModule } from '../src/product.module';
+import { ProductsModule } from '../src/product.module';
 
 const url = require('../product.json')
 describe('AppController (e2e)', () => {
@@ -9,7 +9,7 @@ describe('AppController (e2e)', () => {
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [ProductModule],
+      imports: [ProductsModule],
     }).compile();
 
     app = moduleFixture.createNestApplication();

@@ -1,127 +1,143 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ProductController } from './product.controller';
-import { ProductService } from './product.service';
-import { IProduct } from './IProduct';
+import { ProductsController } from './product.controller';
+import { ProductsService } from './product.service';
+import { IProduct } from './Iproduct';
 
-describe('AppController', () => {
-  let productController: ProductController;
-  let productService: ProductService;
+describe('ProductsController', () => {
+  let productsController: ProductsController;
+  let productsService: ProductsService;
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
-      controllers: [ProductController],
-      providers: [ProductService],
+      controllers: [ProductsController],
+      providers: [ProductsService],
     }).compile();
 
-    productController = app.get<ProductController>(ProductController);
-    productService = app.get<ProductService>(ProductService);
+    productsController = app.get<ProductsController>(ProductsController);
+    productsService = app.get<ProductsService>(ProductsService);
   });
+
   describe('root', () => {
+//se testea que los metodos esten definidos
     it('should be defined', () => {
-      expect(productService.createProduct).toBeDefined();
-      expect(productService.deleteProduct).toBeDefined();
-      expect(productService.updateById).toBeDefined();
-      expect(productService.findAll).toBeDefined();
-      expect(productService.findById).toBeDefined();
+      expect(productsService.create).toBeDefined();
+      expect(productsService.delete).toBeDefined();
+      expect(productsService.findAll).toBeDefined();
+      expect(productsService.findById).toBeDefined();
+      expect(productsService.update).toBeDefined();
     });
-    it('should not be empty', async () => {
-      const products = await productService.findAll();
-      expect(products).not.toEqual([]);
+
+//se verifica si la función findAll() del servicio devuelve una lista vacía de productos 
+//porque en nuestro caso no contamos con datos almacenados en un archivo .json por ejemplo 
+    it('should not be empty ', () => {
+      const products = productsService.findAll();
+      expect(products).toEqual([]);
     });
-    it('should create a new products', async () => {
+
+//se testea la creacion de un nuevo producto (se pasa un producto para simular la creacion 
+//y posteriormente el test)
+    it('should create a new product', () => {
       const newProduct: IProduct = {
         id: '1',
-        nombre: 'Laptop HP Pavilion',
-        marca: 'HP',
-        descripcion:
-          'Laptop con procesador Intel Core i5, 8GB de RAM, y SSD de 256GB',
-        precio: 899.99,
-        stock: 30,
+        nombre: 'a24',
+        marca: 'Samsung',
+        descripcion: 'celular',
+        precio: 25,
+        stock: 50,
       };
-      const createProduct = await productService.createProduct(newProduct);
-      expect(createProduct).toEqual(newProduct);
-      expect(createProduct).not.toBeNull();
+      const createdProduct = productsService.create(newProduct);
+      const foundProduct = productsService.findById('1');
+      expect(createdProduct).toEqual(newProduct); //1ro verificamos que lo crea
+      expect(foundProduct).toEqual(newProduct); //posteriormente evaluamos si es igual al id pasado como parametro
     });
-    it('should not allow creation of product with negative stock', async () => {
-      const productWithNegSt: IProduct = {
+
+//se verifica el stock no sea negativo, en caso de que asi sea no se creara el registro
+    it('should not allow creation of product with negative stock', () => {
+      const productWithNegativeStock: IProduct = {
+        id: '8',
+        nombre: 'Batería externa Anker PowerCore',
+        marca: 'Anker',
+        descripcion: 'Batería portátil de 20000mAh para cargar dispositivos móviles',
+        precio: 49.99,
+        stock: -22,
+      };
+      const result = productsService.create(productWithNegativeStock);
+      expect(result).toBeNull(); //se verifica que el resultado obtenido sea null
+    });
+  
+//se verifica el precio no sea negativo, en caso de que asi sea no se creara el registro
+    it('should not allow creation of product with negative price', () => {
+      const productWithNegativePrice: IProduct = {
+        id: '9',
+        nombre: 'Teclado mecánico Corsair K70 RGB',
+        marca: 'Corsair',
+        descripcion: 'Teclado mecánico para juegos con retroiluminación RGB',
+        precio: -159.95,
+        stock: 20,
+      };
+      const result = productsService.create(productWithNegativePrice);
+      expect(result).toBeNull(); //se verifica que el resultado obtenido sea null
+    });
+ 
+//se testea la actualizacion de un producto existente
+    it('should update an existing product', () => {
+      const initialProduct: IProduct = {
         id: '1',
-        nombre: 'Laptop HP Pavilion',
-        marca: 'HP',
-        descripcion:
-          'Laptop con procesador Intel Core i5, 8GB de RAM, y SSD de 256GB',
-        precio: 899.99,
-        stock: -30,
+        nombre: 'a24',
+        marca: 'Samsung',
+        descripcion: 'celular',
+        precio: 25,
+        stock: 50,
       };
-      const result = await productService.createProduct(productWithNegSt);
-      expect(result).toBeNull();
-    });
-    it('should not allow creation of product with negative price', async () => {
-      const productWithNegPc: IProduct = {
+      productsService.create(initialProduct);
+      const updatedProductData: IProduct = {
         id: '1',
-        nombre: 'Laptop HP Pavilion',
-        marca: 'HP',
-        descripcion:
-          'Laptop con procesador Intel Core i5, 8GB de RAM, y SSD de 256GB',
-        precio: -899.99,
-        stock: 30,
+        nombre: 'a24',
+        marca: 'Samsung',
+        descripcion: 'celular',
+        precio: 25,
+        stock: 51,
       };
-      const result = await productService.createProduct(productWithNegPc);
-      expect(result).toBeNull();
+      const updatedProduct = productsService.update('1', updatedProductData);
+      expect(updatedProduct).toEqual(updatedProductData); 
+      //verificamos que el id sea el correcto y obtenga los datos modificados
     });
-    it('should update and existing product', async () => {
-      const inicialProduct: IProduct = {
+
+//no permite la actualizacion de un registro que no existe
+    it('should not update a non-existing product', () => {
+      const updatedProductData: IProduct = {
         id: '1',
-        nombre: 'Laptop HP Pavilion',
-        marca: 'HP',
-        descripcion:
-          'Laptop con procesador Intel Core i5, 8GB de RAM, y SSD de 256GB',
-        precio: 899.99,
-        stock: 30,
+        nombre: 'a24',
+        marca: 'Samsung',
+        descripcion: 'celular',
+        precio: 25,
+        stock: 51,
       };
-      await productService.createProduct(inicialProduct);
-      const updatedData: IProduct = {
+      const updatedProduct = productsService.update('1', updatedProductData);
+      expect(updatedProduct).toBeFalsy(); //verificamos que el resultado sea Falsy
+    });
+
+// testear la eliminacion de un registro
+    it('should delete an existing product', () => {
+      const productToDelete: IProduct = {
         id: '1',
-        nombre: 'Laptop HP Pavilion',
-        marca: 'HP',
-        descripcion:
-          'Laptop con procesador Intel Core i5, 8GB de RAM, y SSD de 256GB',
-        precio: -899.99,
-        stock: 35,
+        nombre: 'a24',
+        marca: 'Samsung',
+        descripcion: 'celular',
+        precio: 25,
+        stock: 51,
       };
-      const updateProduct = await productService.updateById('1', updatedData);
-      expect(updateProduct).toBeNull();
+      productsService.create(productToDelete);
+      const deletedProduct = productsService.delete('1');
+      const foundProduct = productsService.findById('1');
+      expect(deletedProduct).toEqual(productToDelete);//verificamos que el producto a eliminar,efectivamente sea el indicado
+      expect(foundProduct).toBeFalsy();//verificamos que el resultado sea Falsy
     });
-    it('should not update an non-existing product', async () => {
-      const productNotExist: IProduct | null = {
-        id: '1',
-        nombre: 'Laptop HP Pavilion',
-        marca: 'HP',
-        descripcion:
-          'Laptop con procesador Intel Core i5, 8GB de RAM, y SSD de 256GB',
-        precio: 899.99,
-        stock: 30,
-      };
-      const result = await productService.updateById('18', productNotExist);
-      expect(result).toBeNull();
-    });
-    it('should delete an non existing product', async () => {
-          const result = await productService.deleteProduct('15');
-      expect(result).toBeNull();
-    });
-    it('should delete an non existing product', async () => {
-        const productToDelete: IProduct = {
-            id: '16',
-            nombre: 'Laptop HP Pavilion',
-            marca: 'HP',
-            descripcion:
-              'Laptop con procesador Intel Core i5, 8GB de RAM, y SSD de 256GB',
-            precio: 899.99,
-            stock: 30,
-          };
-          await productService.createProduct(productToDelete);
-      const productExisting = '16';
-      const result = await productService.deleteProduct(productExisting);
-      expect(result).not.toBeNull();
+
+//no permite eliminar un registro inexistente
+    it('should not delete a non-existing product', () => {
+      const deletedProduct = productsService.delete('1');
+      expect(deletedProduct).toBeFalsy();//verificamos que el resultado sea Falsy
     });
   });
 });

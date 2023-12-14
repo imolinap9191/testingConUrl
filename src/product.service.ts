@@ -1,111 +1,59 @@
 import { Injectable } from '@nestjs/common';
-import { IProduct } from './IProduct';
+import { IProduct } from './Iproduct';
 
-
-const url = 'http://localhost:3030/products/';
 @Injectable()
-export class ProductService {
-  async findAll(): Promise<IProduct[]> {
-      const res = await fetch(url);
-      const products = await res.json();
+export class ProductsService {
+  private products: IProduct[] = [];
 
-      const dataProduct = products.map((p) => ({
-        id: p.id,
-        nombre: p.nombre,
-        marca: p.marca,
-        descripcion:p.descipcion,
-        precio: p.precio,
-        stock: p.stock,
-      }));
-      return dataProduct;
-  }
-  async findById(id: string): Promise<IProduct | null> {
- 
-      const res = await fetch(url + id);
-     
-      const p = await res.json();
-      const respData = {
-        id: p.id,
-       nombre: p.nombre,
-        marca: p.marca,
-        descripcion:p.descipcion,
-        precio: p.precio,
-        stock: p.stock,
-      };
-      return respData;
+  findAll(): IProduct[] {
+//retorna un array de productos en donde estan todos los productos almacenados en la propiedad products.
+    return this.products;
   }
 
-
-  async createProduct(product: IProduct) {
-   
-      if (product.stock <0 || product.precio <0){
-        return null
-      }{
-      const newProduct = { ...product};
-      await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newProduct),
-      });
-      const producData = {
-        id: newProduct.id,
-        nombre: newProduct.nombre,
-         marca: newProduct.marca,
-         descripcion:newProduct.descripcion,
-         precio: newProduct.precio,
-         stock: newProduct.stock,
-      };
-
-      return producData;}
-
+  findById(id: string): IProduct {
+//se pasa un id como argumento y busca un producto en el array products que coincida con ese id.
+//se retorna el producto encontrado
+    return this.products.find((product) => product.id === id);
   }
-  async deleteProduct(id: string): Promise<IProduct | null> {
 
-      const res = await fetch(url + id, {
-        method: 'DELETE',
-      });
-      if (!res.ok) {
+  create(product: IProduct): IProduct {
+//se pasa un objeto product como argumento.
+//antes de pushearlo al array, chequemos que el precio o el stock sea mayor que 0
+//si es menor se retorna nulo
+    if (product.stock < 0 || product.precio < 0) {
       return null;
-        }
-      return await res.json();
-   
+    }
+//si es mayor se agrega y se retorna el producto agregado
+   this.products.push(product);
+    return product;
   }
- async updateById(
-    id: string,
-    body: IProduct,
-  ): Promise<IProduct | null> {
-    
-      const existingProduct = await this.findById(id);
-      if(!existingProduct){
-        return null;
-      }
-      if (body.stock <0 || body.precio <0){
-        return null }
-      const upProduct = {
-        id: body.id,
-        nombre: body.nombre,
-         marca: body.marca,
-         descripcion:body.descripcion,
-         precio: body.precio,
-         stock: body.stock,
-      };
 
-      const res = await fetch(url + id, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(upProduct),
-      });
-      if (res.status === 404) {
-        return null;
-      }
-      if(!res.ok){
-      throw new Error();
-      }
-      return await res.json();
-    
+  update(id: string, updatedProduct: IProduct): IProduct {
+//se pasa un id como argumento del producto que se va a actualizar,
+//y en un objeto se pasan los datos actualizados del producto.
+    const nroIndice = this.products.findIndex((p) => p.id === id);
+//se busca el índice del producto con el id proporcionado en el array products.
+//si se encuentra el producto, actualiza sus campos con los valores proporcionados 
+    if (nroIndice !== -1) {
+      this.products[nroIndice] = {
+        ...this.products[nroIndice],
+        ...updatedProduct,
+      };
+//retorna el producto actualizado.
+      return this.products[nroIndice];
+    }
+  }
+
+  delete(id: string): IProduct {
+//se pasa un id como argumento del producto que se desea eliminar
+    const nroIndice = this.products.findIndex((p) => p.id === id);
+//se busca el índice del producto con el id proporcionado en el array products
+//si se encuentra, se lo elimina del array usando splice
+    if (nroIndice !== -1) {
+      const deleteProduct = this.products[nroIndice];
+      this.products.splice(nroIndice, 1);
+//se retorna el producto eliminado
+      return deleteProduct;
+    }
   }
 }
