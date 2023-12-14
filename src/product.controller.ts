@@ -1,47 +1,29 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Param,
-  Delete,
-  Put,
-} from '@nestjs/common';
-import { ProductsService } from './product.service';
-import { IProduct } from './Iproduct';
+import { Controller, Get, Param, Post,Body,Put, Delete } from '@nestjs/common';
+import { ProductService } from './product.service';
+import { IProduct } from './IProduct';
 
-@Controller('products')
-export class ProductsController {
-  constructor(private readonly productsService: ProductsService) {}
-
+@Controller()
+export class ProductController {
+  constructor(private readonly productService: ProductService) {}
   @Get()
-//devuelve todos los productos existentes usando el metodo findAll del servicio
-  findAll(): IProduct[] {
-    return this.productsService.findAll();
+  async findAll(): Promise<IProduct[]> {
+    return await this.productService.findAll();
   }
-
   @Get(':id')
-//devuelve los datos del producto que corresponde con el id proporcionado, utiliza el metodo findById del servicio
-  findById(@Param('id') id: string): IProduct {
-    return this.productsService.findById(id);
+  async findById(@Param(':id') id: string): Promise<IProduct> {
+    return await this.productService.findById(id);
   }
-
   @Post()
-//crea un nuevo producto con la información que se pasa en el body 
-  create(@Body() product: IProduct): IProduct {
-    return this.productsService.create(product);
+  async create(@Body() product:IProduct):Promise<IProduct>{
+    return await this.productService.createProduct(product)
   }
-
-  @Put(':id')
-//se actualiza un producto existente basado en el ID que se pasa como parámetro mas 
-//la información que se proporciona en el body, usando el método update del servicio ProductsService
-  update(@Param('id') id: string, @Body() updatedProducts: IProduct): IProduct {
-    return this.productsService.update(id, updatedProducts);
-  }
-
   @Delete(':id')
-//elimina un producto específico de acuerdo al id  pasado como parametro, usando el método delete del servicio ProductsService
-  delete(@Param(':id') id: string): IProduct {
-    return this.productsService.delete(id);
+  async delete(@Param(':id')id:string):Promise<IProduct>{
+    return await this.productService.deleteProduct(id)
   }
+  @Put(':id')
+  async update(@Param(':id') id:string,@Body() updateProduct:IProduct):Promise<IProduct>{
+    return await this.productService.updateById(id,updateProduct)
+  }
+
 }
